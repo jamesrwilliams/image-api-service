@@ -1,7 +1,17 @@
-from flask import Flask, jsonify
+from datetime import date
+from io import StringIO, BytesIO
+from pprint import pprint
+
+from flask import Flask, jsonify, send_file
+from PIL import Image, ImageFont, ImageDraw
+from tempfile import NamedTemporaryFile
+from shutil import copyfileobj
+from os import remove
 
 app = Flask(__name__)
 
+IMAGE_WIDTH = 860
+IMAGE_HEIGHT = 300
 
 @app.route("/")
 def hello_world():
@@ -13,3 +23,39 @@ def api_page():
     return jsonify({
         'error': 'JSON'
     })
+
+
+@app.route("/api/demo/black-square")
+def api_demo_page():
+    img = Image.new(mode="RGB", size=(250, 250))
+    return serve_pil_image(img)
+
+
+@app.route("/api/demo/text")
+def api_demo_text_page():
+    out = Image.new("RGB", (IMAGE_WIDTH, IMAGE_HEIGHT), (255, 255, 255))
+
+    # get a font
+    # fnt = ImageFont.truetype("Pillow/Tests/fonts/FreeMono.ttf", 40)
+
+    # get a drawing context
+    d = ImageDraw.Draw(out)
+
+    # draw multiline text
+    d.multiline_text((10, 10), "Hello\nWorld", fill=(0, 0, 0))
+
+    today = date.today()
+    d.multiline_text((10,50), today.strftime("%B %d, %Y"), fill=(0, 0, 0))
+
+    return serve_pil_image(out)
+
+
+def serve_pil_image(pil_img):
+    img_io = BytesIO()
+    pil_img.save(img_io, 'JPEG', quality=70)
+    img_io.seek(0)
+    return send_file(img_io, mimetype='image/jpeg')
+
+
+if __name__ == '__main__':
+    app.run()
