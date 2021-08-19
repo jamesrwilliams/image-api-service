@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import datetime
 from io import BytesIO
 
 from flask import Flask, jsonify, send_file
@@ -40,8 +40,8 @@ def api_demo_text_page():
     # draw multiline text
     d.multiline_text((10, 10), "Hello\nWorld", fill=(0, 0, 0))
 
-    today = date.today()
-    d.multiline_text((10,50), today.strftime("%B %d, %Y"), fill=(0, 0, 0))
+    today = datetime.today()
+    d.multiline_text((10,50), today.strftime("%m/%d/%Y, %H:%M:%S"), fill=(0, 0, 0))
 
     return serve_pil_image(out)
 
