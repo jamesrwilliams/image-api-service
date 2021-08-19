@@ -1,12 +1,8 @@
 from datetime import date
-from io import StringIO, BytesIO
-from pprint import pprint
+from io import BytesIO
 
 from flask import Flask, jsonify, send_file
-from PIL import Image, ImageFont, ImageDraw
-from tempfile import NamedTemporaryFile
-from shutil import copyfileobj
-from os import remove
+from PIL import Image, ImageDraw
 
 app = Flask(__name__)
 
