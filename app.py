@@ -9,6 +9,7 @@ app = Flask(__name__)
 IMAGE_WIDTH = 860
 IMAGE_HEIGHT = 300
 
+
 @app.route("/")
 def hello_world():
     return "<p>Hello, World!</p>"
@@ -44,6 +45,33 @@ def api_demo_text_page():
     d.multiline_text((10,50), today.strftime("%m/%d/%Y, %H:%M:%S"), fill=(0, 0, 0))
 
     return serve_pil_image(out)
+
+
+@app.route("/api/status/<lp_name>")
+def api_status_lp_route(lp_name):
+    with Image.open("./assets/base-images/base-single.jpg") as im:
+        d = ImageDraw.Draw(im)
+
+        # Add "Last Updated" text
+        today = datetime.today()
+        d.multiline_text((650, 177), "Last updated:" + today.strftime("%m/%d/%Y, %H:%M:%S"), fill=(0, 0, 0))
+
+        # Add LP Name to image
+        d.multiline_text((400, 25), lp_name, fill=(0, 0, 0))
+
+        return serve_pil_image(im)
+
+
+@app.route("/api/demo/load")
+def api_demo_load_page():
+    with Image.open("./assets/base-images/single-lp.jpg") as im:
+        d = ImageDraw.Draw(im)
+
+        # Add "Last Updated" text
+        today = datetime.today()
+        d.multiline_text((650, 177), "Last updated:" + today.strftime("%m/%d/%Y, %H:%M:%S"), fill=(0, 0, 0))
+
+        return serve_pil_image(im)
 
 
 def serve_pil_image(pil_img):
